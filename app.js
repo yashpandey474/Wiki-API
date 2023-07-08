@@ -130,7 +130,7 @@ app.route("/articles/:articleTitle")
                 title: request.params.articleTitle
             })
                 .then(function(){
-                    response.send("Successfully delete article.");
+                    response.send("Successfully deleted corresponding article.");
                 })
                 .catch(function(err){
                     if(err){
