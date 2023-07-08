@@ -112,7 +112,18 @@ app.route("/articles/:articleTitle")
                 });
         })
         .patch((request, response) => {
-
+            Article.updateOne({
+                title: request.params.articleTitle
+            },
+            {
+                $set: request.body
+            })
+                .then(()=>{
+                    response.send("Successfully patched article");
+                })
+                .catch((err) =>{
+                    response.send(err);
+                });
         })
         .delete((request, response) =>{
             Article.deleteOne({
