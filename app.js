@@ -93,7 +93,6 @@ app.route("/articles/:articleTitle")
         .put((request, response) =>{
             var newContent = request.body.content;
             var newTitle = request.body.title;
-
             Article.replaceOne({
                 title: request.params.articleTitle
             },
@@ -111,6 +110,9 @@ app.route("/articles/:articleTitle")
                         response.send(err);
                     }
                 });
+        })
+        .patch((request, response) => {
+
         })
         .delete((request, response) =>{
             Article.deleteOne({
