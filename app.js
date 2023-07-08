@@ -77,14 +77,54 @@ app.route("/articles/:articleTitle")
                 title: requestedArticle
             })
                 .then(function(foundArticle){
-                    response.send(foundArticle);
+                    if(foundArticle){
+                        response.send(foundArticle);
+                    }
+                    else{
+                        response.send("No article with requested title was found");
+                    }
+                })
+                .catch(function(err){
+                    if(err){
+                        response.send(err);
+                    }
+                });
+        })
+        .put((request, response) =>{
+            var newContent = request.body.content;
+            var newTitle = request.body.title;
+
+            Article.replaceOne({
+                title: request.params.articleTitle
+            },
+            {
+                title: newTitle,
+                content: newContent
+        
+            },
+            )
+                .then(function(){
+                    response.send("Successfully updated article with title: " + request.params.articleTitle +  " new content: " + newContent + " new title: " + newTitle);
+                })
+                .catch(function(err){
+                    if(err){
+                        response.send(err);
+                    }
+                });
+        })
+        .delete((request, response) =>{
+            Article.deleteOne({
+                title: request.params.articleTitle
+            })
+                .then(function(){
+                    response.send("Successfully delete article.");
                 })
                 .catch(function(err){
                     if(err){
                         response.send(err);
                     }
                 })
-        });
+        })
 //SETUP SERVER
 app.listen(3000, function(){
     console.log("Server started on port 3000");
