@@ -25,10 +25,9 @@ const article1 = new Article({
     content: "This is a demo article"
 });
 
-
+//<!-------------------- ROUTE FOR ALL ARTICLES -----------------------!>
 app.route("/articles")
-    .get(
-        function (request, response) {
+    .get((request, response) => {
             Article.find({})
                 .then(function (articles) {
                     //RETURN THE ARTICLES
@@ -42,8 +41,7 @@ app.route("/articles")
                     }
                 });
         })
-    .delete (
-    function (request, response) {
+    .delete ((request, response) => {
         Article.deleteMany({})
             .then(function () {
                 response.send("Successfully Deleted All Articles");
@@ -52,8 +50,7 @@ app.route("/articles")
                 response.send(err);
             });
     })
-    .post(
-        function (request, response) {
+    .post((request, response) => {
             console.log(request.body.title);
             console.log(request.body.content);
             //API WITHOUT THE NEED OF A FRONTEND GETS THE DATA FROM USER
@@ -71,8 +68,23 @@ app.route("/articles")
                     response.send(err);
                 });
 
-        })
-
+        });
+//<!---------------------- ROUTE FOR PARTICULAR ARTICLE ----------------!>
+app.route("/articles/:articleTitle")
+        .get((request, response) => {
+            const requestedArticle = request.params.articleTitle;
+            Article.findOne({
+                title: requestedArticle
+            })
+                .then(function(foundArticle){
+                    response.send(foundArticle);
+                })
+                .catch(function(err){
+                    if(err){
+                        response.send(err);
+                    }
+                })
+        });
 //SETUP SERVER
 app.listen(3000, function(){
     console.log("Server started on port 3000");
