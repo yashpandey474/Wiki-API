@@ -25,59 +25,53 @@ const article1 = new Article({
     content: "This is a demo article"
 });
 
-//GET ALL ARTICLES
-app.get(
-    "/articles",
-    function(request, response){
-        Article.find({})
-            .then(function(articles){
-                //RETURN THE ARTICLES
-                response.send(articles);
-                
-            })
-            .catch(function(err){
-                if(err){
-                    //RETURN THE ERROR STATEMENT
-                    response.send(err)
-                }
-            });
-});
 
-//DELETE ALL ARTICLES
-app.delete(
-    "/articles",
-    function(request, response){
+app.route("/articles")
+    .get(
+        function (request, response) {
+            Article.find({})
+                .then(function (articles) {
+                    //RETURN THE ARTICLES
+                    response.send(articles);
+
+                })
+                .catch(function (err) {
+                    if (err) {
+                        //RETURN THE ERROR STATEMENT
+                        response.send(err)
+                    }
+                });
+        })
+    .delete (
+    function (request, response) {
         Article.deleteMany({})
-            .then(function(){
+            .then(function () {
                 response.send("Successfully Deleted All Articles");
             })
-            .catch(function(err){
+            .catch(function (err) {
                 response.send(err);
             });
-})
+    })
+    .post(
+        function (request, response) {
+            console.log(request.body.title);
+            console.log(request.body.content);
+            //API WITHOUT THE NEED OF A FRONTEND GETS THE DATA FROM USER
+            const newArticle = new Article({
+                title: request.body.title,
+                content: request.body.content
+            });
 
-//POST A NEW ARTICLE
-app.post(
-    "/articles",
-    function(request, response){
-        console.log(request.body.title);
-        console.log(request.body.content);
-        //API WITHOUT THE NEED OF A FRONTEND GETS THE DATA FROM USER
-        const newArticle = new Article({
-            title: request.body.title,
-            content: request.body.content
-        });
+            //SAVE INTO DATABASE
+            newArticle.save()
+                .then(function () {
+                    response.send("Successfully saved new article");
+                })
+                .catch(function (err) {
+                    response.send(err);
+                });
 
-        //SAVE INTO DATABASE
-        newArticle.save()
-        .then(function(){
-            response.send("Successfully saved new article");
         })
-        .catch(function(err){
-            response.send(err);
-        });
-           
-})
 
 //SETUP SERVER
 app.listen(3000, function(){
